@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hot Carl Fantasy League</title>
+<link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* =============================================
+     HOT CARL FANTASY LEAGUE — EDIT GUIDE
+     =============================================
+     TEAM NAMES & MANAGERS: Search for "TEAM DATA"
+     STANDINGS: Search for "STANDINGS DATA"
+     TROPHY CASE: Search for "TROPHY DATA"
+     MATCHUPS: Search for "MATCHUP DATA"
+     KEEPERS: Search for "KEEPER DATA"
+     TRADES: Search for "TRADE DATA"
+     DRAFT: Search for "DRAFT DATA"
+     PLAYOFF %: Search for "PLAYOFF DATA"
+     TRASH TALK: Search for "TRASH TALK DATA"
+     ============================================= */
+
+  :root {
+    --ff-green: #5bb8f5;
+    --ff-gold: #89d4f7;
+    --ff-dark: #0a0a0a;
+    --ff-mid: #141414;
+    --ff-light: #ffffff;
+    --ff-muted: #7a8a9a;
+    --ff-accent: #7ecff5;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { font-family: 'Inter', sans-serif; background: var(--ff-dark); color: var(--ff-light); min-height: 100vh; }
+
+  .header {
+    background: var(--ff-mid);
+    border-bottom: 2px solid #7ecff5;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo {
+    font-family: 'Black Ops One', sans-serif;
+    font-size: 22px;
+    letter-spacing: 2px;
+    color: var(--ff-accent);
+  }
+  .logo span {
+    color: var(--ff-muted);
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0;
+    margin-left: 10px;
+  }
+  nav { display: flex; gap: 4px; flex-wrap: wrap; }
+  .nav-btn {
+    background: none;
+    border: none;
+    color: var(--ff-muted);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .nav-btn:hover, .nav-btn.active { background: rgba(126,207,245,0.15); color: var(--ff-accent); }
+
+  .content { padding: 24px; max-width: 1100px; margin: 0 auto; }
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .page-title {
+    font-family: 'Black Ops One', sans-serif;
+    font-size: 28px;
+    letter-spacing: 2px;
+    color: var(--ff-accent);
+    margin-bottom: 20px;
+  }
+  .subsection-title {
+    font-family: 'Black Ops One', sans-serif;
+    font-size: 16px;
+    letter-spacing: 1px;
+    color: var(--ff-muted);
+    margin: 24px 0 10px;
+  }
+
+  /* Filter buttons */
+  .filter-row { display: flex; gap: 8px; margin-bottom: 16px; align-items: center; flex-wrap: wrap; }
+  .season-btn {
+    background: var(--ff-mid);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--ff-muted);
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 5px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .season-btn:hover, .season-btn.active {
+    background: #7ecff5;
+    border-color: #7ecff5;
+    color: #0a0a0a;
+  }
+
+  /* Stat summary row */
+  .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+  .stat-box {
+    background: var(--ff-mid);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+  }
+  .stat-val { font-family: 'Black Ops One', sans-serif; font-size: 28px; color: var(--ff-accent); }
+  .stat-lbl { font-size: 11px; color: var(--ff-muted); text-transform: uppercase; letter-spacing: 1px; }
+
+  /* Standings */
+  .standings-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .standings-table th {
+    text-align: left;
+    padding: 8px 12px;
+    color: var(--ff-muted);
+    font-weight: 500;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid rgba(126,207,245,0.3);
+  }
+  .standings-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .standings-table tr:hover td { background: rgba(255,255,255,0.03); }
+  .rank { font-family: 'Black Ops One', sans-serif; font-size: 20px; color: var(--ff-muted); }
+  .rank.top { color: #7ecff5; }
+  .team-name { font-weight: 600; color: var(--ff-light); }
+  .manager-name { font-size: 11px; color: var(--ff-muted); }
+  .record { color: var(--ff-accent); font-weight: 500; }
+  .champ-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #5bb8f5, #aee4ff);
+    color: var(--ff-dark);
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .streak-w { color: #6dbf6d; font-weight: 500; }
+  .streak-l { color: #e05c5c; font-weight: 500; }
+
+  /* Trophy case */
+  .trophy-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 12px; }
+  .trophy-card {
+    background: var(--ff-mid);
+    border: 1px solid rgba(126,207,245,0.2);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+    transition: border-color 0.2s;
+  }
+  .trophy-card:hover { border-color: var(--ff-accent); }
+  .trophy-icon { font-size: 32px; margin-bottom: 8px; }
+  .trophy-year { font-family: 'Black Ops One', sans-serif; font-size: 22px; color: var(--ff-accent); }
+  .trophy-label { font-size: 11px; color: var(--ff-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .trophy-winner { font-weight: 600; font-size: 14px; color: var(--ff-light); }
+  .trophy-team { font-size: 12px; color: var(--ff-muted); }
+
+  /* H2H Matchups */
+  .h2h-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+  .matchup-card {
+    background: var(--ff-mid);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 13px;
+  }
+  .matchup-week { font-size: 11px; color: var(--ff-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+  .matchup-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; }
+  .matchup-team { font-weight: 500; }
+  .matchup-score { font-family: 'Black Ops One', sans-serif; font-size: 20px; }
+  .win { color: var(--ff-accent); }
+  .lose { color: var(--ff-muted); }
+  .matchup-divider { border: none; border-top: 1px solid rgba(255,255,255,0.06); margin: 4px 0; }
+
+  /* Keeper tracker */
+  .keeper-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .keeper-table th {
+    text-align: left;
+    padding: 8px 12px;
+    color: var(--ff-muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid rgba(126,207,245,0.3);
+    font-weight: 500;
+  }
+  .keeper-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.05); vertical-align: middle; }
+  .keeper-table tr:hover td { background: rgba(255,255,255,0.03); }
+  .year-pip { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 3px; }
+  .pip-used { background: var(--ff-gold); }
+  .pip-empty { background: rgba(255,255,255,0.15); }
+  .years-left-1 { color: #e05c5c; font-weight: 700; }
+  .years-left-2 { color: var(--ff-gold); font-weight: 500; }
+  .years-left-3 { color: #6dbf6d; font-weight: 500; }
+  .player-pos {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 5px;
+    border-radius: 3px;
+    margin-right: 6px;
+  }
+  .pos-rb { background: rgba(52,152,219,0.2); color: #6cb4e4; }
+  .pos-wr { background: rgba(46,204,113,0.2); color: #6dbf6d; }
+  .pos-qb { background: rgba(231,76,60,0.2); color: #e05c5c; }
+  .pos-te { background: rgba(155,89,182,0.2); color: #c39bd3; }
+
+  /* Trade log */
+  .trade-card {
+    background: var(--ff-mid);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 12px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 16px;
+    align-items: center;
+  }
+  .trade-manager { font-size: 11px; color: var(--ff-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .trade-items { display: flex; flex-direction: column; gap: 4px; }
+  .trade-item { font-size: 13px; font-weight: 500; }
+  .trade-pick { font-size: 12px; color: var(--ff-accent); }
+  .trade-arrow { font-size: 22px; color: var(--ff-gold); text-align: center; }
+  .trade-date { font-size: 11px; color: var(--ff-muted); text-align: center; margin-top: 4px; }
+
+  /* Draft */
+  .draft-round { margin-bottom: 20px; }
+  .round-label { font-family: 'Black Ops One', sans-serif; font-size: 18px; color: var(--ff-muted); letter-spacing: 1px; margin-bottom: 8px; }
+  .draft-picks { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }
+  .draft-pick-card {
+    background: var(--ff-mid);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+  .pick-num { font-family: 'Black Ops One', sans-serif; font-size: 14px; color: var(--ff-muted); }
+  .pick-player { font-weight: 600; color: var(--ff-light); margin: 2px 0; }
+  .pick-mgr { font-size: 11px; color: var(--ff-muted); }
+
+  /* Playoff % */
+  .playoff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+  .playoff-card {
+    background: var(--ff-mid);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .playoff-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .playoff-team-name { font-weight: 600; font-size: 14px; }
+  .playoff-manager { font-size: 11px; color: var(--ff-muted); }
+  .playoff-pct {
+    font-family: 'Black Ops One', sans-serif;
+    font-size: 28px;
+  }
+  .pct-high { color: #6dbf6d; }
+  .pct-mid { color: var(--ff-accent); }
+  .pct-low { color: #e05c5c; }
+  .pct-bar-track {
+    height: 6px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+  .pct-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.6s ease;
+  }
+  .fill-high { background: #6dbf6d; }
+  .fill-mid { background: var(--ff-accent); }
+  .fill-low { background: #e05c5c; }
+  .playoff-record { font-size: 12px; color: var(--ff-muted); margin-top: 6px; }
+  .playoff-note { font-size: 12px; color: var(--ff-muted); margin-top: 4px; font-style: italic; }
+  .playoff-updated { font-size: 11px; color: var(--ff-muted); margin-bottom: 16px; }
+  .clinched-badge {
+    display: inline-block;
+    background: rgba(109,191,109,0.2);
+    color: #6dbf6d;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 3px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .eliminated-badge {
+    display: inline-block;
+    background: rgba(224,92,92,0.2);
+    color: #e05c5c;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 3px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  /* Message board */
+  .msg-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+  .msg-card {
+    background: var(--ff-mid);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 10px;
+    padding: 14px;
+  }
+  .msg-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .msg-author { font-weight: 600; font-size: 13px; }
+  .msg-time { font-size: 11px; color: var(--ff-muted); }
+  .msg-body { font-size: 13px; color: rgba(245,240,232,0.85); line-height: 1.5; }
+  .msg-compose {
+    background: var(--ff-mid);
+    border: 1px solid rgba(126,207,245,0.3);
+    border-radius: 10px;
+    padding: 12px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+  }
+  .msg-input {
+    flex: 1;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    color: var(--ff-light);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    padding: 8px 12px;
+    resize: none;
+    height: 60px;
+  }
+  .msg-input::placeholder { color: var(--ff-muted); }
+  .msg-send {
+    background: #7ecff5;
+    border: none;
+    border-radius: 8px;
+    color: var(--ff-dark);
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 8px 16px;
+    cursor: pointer;
+    height: 36px;
+    transition: background 0.15s;
+  }
+  .msg-send:hover { background: var(--ff-accent); }
+
+  @media (max-width: 700px) {
+    .header { flex-direction: column; height: auto; padding: 10px; gap: 8px; }
+    nav { justify-content: center; }
+    .h2h-grid, .playoff-grid { grid-template-columns: 1fr; }
+    .stat-row { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <!-- EDIT: Change league name below -->
+  <div class="logo">HOT CARL <span>Fantasy League</span></div>
+  <nav>
+    <button class="nav-btn active" onclick="showSection('standings', this)">Standings</button>
+    <button class="nav-btn" onclick="showSection('trophies', this)">Trophy Case</button>
+    <button class="nav-btn" onclick="showSection('h2h', this)">Matchups</button>
+    <button class="nav-btn" onclick="showSection('keepers', this)">Keepers</button>
+    <button class="nav-btn" onclick="showSection('trades', this)">Trades</button>
+    <button class="nav-btn" onclick="showSection('draft', this)">Draft</button>
+    <button class="nav-btn" onclick="showSection('playoffs', this)">Playoff %</button>
+    <button class="nav-btn" onclick="showSection('board', this)">Trash Talk</button>
+  </nav>
+</div>
+
+<div class="content">
+
+  <!-- ===================== STANDINGS ===================== -->
+  <!-- STANDINGS DATA: Edit team names, managers, records, points, streaks below -->
+  <div class="section active" id="standings">
+    <div class="page-title">Standings</div>
+    <div class="filter-row">
+      <!-- EDIT: Add/remove season years as needed -->
+      <button class="season-btn active" onclick="filterSeason(this)">2024</button>
+      <button class="season-btn" onclick="filterSeason(this)">2023</button>
+      <button class="season-btn" onclick="filterSeason(this)">2022</button>
+      <button class="season-btn" onclick="filterSeason(this)">2021</button>
+      <button class="season-btn" onclick="filterSeason(this)">All Time</button>
+    </div>
+    <table class="standings-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Team</th>
+          <th>Manager</th>
+          <th>W-L</th>
+          <th>PF</th>
+          <th>PA</th>
+          <th>Streak</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- EDIT: Each <tr> is one team. Copy/paste a row to add teams. -->
+        <!-- Format: rank | team name (+ badge if champ) | manager | record | points for | points against | streak -->
+        <tr>
+          <td><div class="rank top">1</div></td>
+          <td><div class="team-name">Mahomes Alone <span class="champ-badge">🏆 '23</span></div></td>
+          <td><div class="manager-name">Jake T.</div></td>
+          <td class="record">11-3</td>
+          <td>1842.4</td>
+          <td>1601.2</td>
+          <td class="streak-w">W4</td>
+        </tr>
+        <tr>
+          <td><div class="rank top">2</div></td>
+          <td><div class="team-name">Ekeler Shelf</div></td>
+          <td><div class="manager-name">Sarah M.</div></td>
+          <td class="record">10-4</td>
+          <td>1798.1</td>
+          <td>1644.3</td>
+          <td class="streak-w">W2</td>
+        </tr>
+        <tr>
+          <td><div class="rank">3</div></td>
+          <td><div class="team-name">Back That Stafford Up</div></td>
+          <td><div class="manager-name">Devon R.</div></td>
+          <td class="record">9-5</td>
+          <td>1755.8</td>
+          <td>1710.4</td>
+          <td class="streak-l">L1</td>
+        </tr>
+        <tr>
+          <td><div class="rank">4</div></td>
+          <td><div class="team-name">CMC Hammer</div></td>
+          <td><div class="manager-name">Priya K.</div></td>
+          <td class="record">8-6</td>
+          <td>1701.3</td>
+          <td>1698.7</td>
+          <td class="streak-l">L2</td>
+        </tr>
+        <tr>
+          <td><div class="rank">5</div></td>
+          <td><div class="team-name">Touch Down Bad Guy</div></td>
+          <td><div class="manager-name">Marcus L.</div></td>
+          <td class="record">7-7</td>
+          <td>1655.0</td>
+          <td>1720.1</td>
+          <td class="streak-w">W1</td>
+        </tr>
+        <tr>
+          <td><div class="rank">6</div></td>
+          <td><div class="team-name">Inglorious Busters</div></td>
+          <td><div class="manager-name">Toni B.</div></td>
+          <td class="record">5-9</td>
+          <td>1580.2</td>
+          <td>1801.3</td>
+          <td class="streak-l">L3</td>
+        </tr>
+        <tr>
+          <td><div class="rank">7</div></td>
+          <td><div class="team-name">Josh Allen My Life</div></td>
+          <td><div class="manager-name">Chris W.</div></td>
+          <td class="record">4-10</td>
+          <td>1520.9</td>
+          <td>1844.5</td>
+          <td class="streak-l">L5</td>
+        </tr>
+        <tr>
+          <td><div class="rank">8</div></td>
+          <td><div class="team-name">RotoGrinding Nemo</div></td>
+          <td><div class="manager-name">Ling H.</div></td>
+          <td class="record">2-12</td>
+          <td>1402.1</td>
+          <td>1835.2</td>
+          <td class="streak-l">L8</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===================== TROPHY CASE ===================== -->
+  <!-- TROPHY DATA: Edit champions, awards, and league stats below -->
+  <div class="section" id="trophies">
+    <div class="page-title">Trophy Case</div>
+    <!-- EDIT: Update these 4 league-wide stats -->
+    <div class="stat-row">
+      <div class="stat-box"><div class="stat-val">4</div><div class="stat-lbl">Seasons</div></div>
+      <div class="stat-box"><div class="stat-val">8</div><div class="stat-lbl">Teams</div></div>
+      <div class="stat-box"><div class="stat-val">2</div><div class="stat-lbl">Repeat champs</div></div>
+      <div class="stat-box"><div class="stat-val">0</div><div class="stat-lbl">Sacko repeat</div></div>
+    </div>
+
+    <div class="subsection-title">Champions</div>
+    <!-- EDIT: One trophy-card per season. Copy to add more years. -->
+    <div class="trophy-grid">
+      <div class="trophy-card">
+        <div class="trophy-icon">🏆</div>
+        <div class="trophy-year">2024</div>
+        <div class="trophy-label">Champion</div>
+        <div class="trophy-winner">Jake T.</div>
+        <div class="trophy-team">Mahomes Alone</div>
+      </div>
+      <div class="trophy-card">
+        <div class="trophy-icon">🏆</div>
+        <div class="trophy-year">2023</div>
+        <div class="trophy-label">Champion</div>
+        <div class="trophy-winner">Jake T.</div>
+        <div class="trophy-team">Mahomes Alone</div>
+      </div>
+      <div class="trophy-card">
+        <div class="trophy-icon">🏆</div>
+        <div class="trophy-year">2022</div>
+        <div class="trophy-label">Champion</div>
+        <div class="trophy-winner">Sarah M.</div>
+        <div class="trophy-team">Ekeler Shelf</div>
+      </div>
+      <div class="trophy-card">
+        <div class="trophy-icon">🏆</div>
+        <div class="trophy-year">2021</div>
+        <div class="trophy-label">Champion</div>
+        <div class="trophy-winner">Priya K.</div>
+        <div class="trophy-team">CMC Hammer</div>
+      </div>
+    </div>
+
+    <div class="subsection-title">Other Awards</div>
+    <!-- EDIT: Add/change awards here. Emojis make great trophy icons. -->
+    <div class="trophy-grid">
+      <div class="trophy-card">
+        <div class="trophy-icon">💩</div>
+        <div class="trophy-year">2024</div>
+        <div class="trophy-label">Sacko</div>
+        <div class="trophy-winner">Ling H.</div>
+        <div class="trophy-team">RotoGrinding Nemo</div>
+      </div>
+      <div class="trophy-card">
+        <div class="trophy-icon">🎯</div>
+        <div class="trophy-year">2024</div>
+        <div class="trophy-label">Top Scorer</div>
+        <div class="trophy-winner">Jake T.</div>
+        <div class="trophy-team">1842.4 pts</div>
+      </div>
+      <div class="trophy-card">
+        <div class="trophy-icon">😤</div>
+        <div class="trophy-year">2024</div>
+        <div class="trophy-label">Most Unlucky</div>
+        <div class="trophy-winner">Priya K.</div>
+        <div class="trophy-team">8-6, missed playoffs</div>
+      </div>
+      <div class="trophy-card">
+        <div class="trophy-icon">🔥</div>
+        <div class="trophy-year">2024</div>
+        <div class="trophy-label">Best Trade</div>
+        <div class="trophy-winner">Devon R.</div>
+        <div class="trophy-team">Sold Kelce high</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== MATCHUPS ===================== -->
+  <!-- MATCHUP DATA: Edit weekly matchup scores below -->
+  <div class="section" id="h2h">
+    <div class="page-title">Head-to-Head</div>
+    <div class="filter-row">
+      <!-- EDIT: Add/remove week buttons as needed -->
+      <button class="season-btn active" onclick="filterSeason(this)">Week 14</button>
+      <button class="season-btn" onclick="filterSeason(this)">Week 13</button>
+      <button class="season-btn" onclick="filterSeason(this)">Week 12</button>
+      <button class="season-btn" onclick="filterSeason(this)">Playoffs</button>
+    </div>
+    <!-- EDIT: Each matchup-card is one game. Winner gets class="win", loser gets class="lose" -->
+    <div class="h2h-grid">
+      <div class="matchup-card">
+        <div class="matchup-week">Championship · Week 14</div>
+        <div class="matchup-row">
+          <span class="matchup-team win">Mahomes Alone</span>
+          <span class="matchup-score win">148.2</span>
+        </div>
+        <hr class="matchup-divider">
+        <div class="matchup-row">
+          <span class="matchup-team lose">Ekeler Shelf</span>
+          <span class="matchup-score lose">131.7</span>
+        </div>
+      </div>
+      <div class="matchup-card">
+        <div class="matchup-week">3rd Place · Week 14</div>
+        <div class="matchup-row">
+          <span class="matchup-team win">CMC Hammer</span>
+          <span class="matchup-score win">141.0</span>
+        </div>
+        <hr class="matchup-divider">
+        <div class="matchup-row">
+          <span class="matchup-team lose">Back That Stafford Up</span>
+          <span class="matchup-score lose">118.4</span>
+        </div>
+      </div>
+      <div class="matchup-card">
+        <div class="matchup-week">Regular Season · Week 13</div>
+        <div class="matchup-row">
+          <span class="matchup-team win">Touch Down Bad Guy</span>
+          <span class="matchup-score win">139.5</span>
+        </div>
+        <hr class="matchup-divider">
+        <div class="matchup-row">
+          <span class="matchup-team lose">Josh Allen My Life</span>
+          <span class="matchup-score lose">102.1</span>
+        </div>
+      </div>
+      <div class="matchup-card">
+        <div class="matchup-week">Regular Season · Week 13</div>
+        <div class="matchup-row">
+          <span class="matchup-team win">Inglorious Busters</span>
+          <span class="matchup-score win">125.8</span>
+        </div>
+        <hr class="matchup-divider">
+        <div class="matchup-row">
+          <span class="matchup-team lose">RotoGrinding Nemo</span>
+          <span class="matchup-score lose">89.3</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== KEEPERS ===================== -->
+  <!-- KEEPER DATA: Edit keeper list below. Max 3 years per player. -->
+  <div class="section" id="keepers">
+    <div class="page-title">Keeper Tracker</div>
+    <p style="font-size:13px; color:var(--ff-muted); margin-bottom:16px;">
+      Players can be kept for a maximum of 3 seasons. Keeper cost = the round they were originally drafted. Filled dots = years used.
+    </p>
+    <table class="keeper-table">
+      <thead>
+        <tr>
+          <th>Player</th>
+          <th>Manager</th>
+          <th>Draft Round</th>
+          <th>Keep Cost</th>
+          <th>Years Used</th>
+          <th>Years Left</th>
+          <th>Expires After</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- EDIT: Each row is one keeper.
+             pip-used = filled dot (year used), pip-empty = open dot (year remaining)
+             Years left class: years-left-1 (red/urgent), years-left-2 (yellow), years-left-3 (green)
+             Copy a row to add more keepers. -->
+        <tr>
+          <td><span class="player-pos pos-qb">QB</span><strong>Josh Allen</strong></td>
+          <td>Jake T.</td>
+          <td>Rd 1</td>
+          <td>Rd 1</td>
+          <td>
+            <span class="year-pip pip-used"></span>
+            <span class="year-pip pip-used"></span>
+            <span class="year-pip pip-empty"></span>
+          </td>
+          <td class="years-left-1">1 left</td>
+          <td>After 2025</td>
+        </tr>
+        <tr>
+          <td><span class="player-pos pos-wr">WR</span><strong>Tyreek Hill</strong></td>
+          <td>Sarah M.</td>
+          <td>Rd 2</td>
+          <td>Rd 2</td>
+          <td>
+            <span class="year-pip pip-used"></span>
+            <span class="year-pip pip-empty"></span>
+            <span class="year-pip pip-empty"></span>
+          </td>
+          <td class="years-left-2">2 left</td>
+          <td>After 2026</td>
+        </tr>
+        <tr>
+          <td><span class="player-pos pos-rb">RB</span><strong>Bijan Robinson</strong></td>
+          <td>Devon R.</td>
+          <td>Rd 3</td>
+          <td>Rd 3</td>
+          <td>
+            <span class="year-pip pip-used"></span>
+            <span class="year-pip pip-empty"></span>
+            <span class="year-pip pip-empty"></span>
+          </td>
+          <td class="years-left-2">2 left</td>
+          <td>After 2026</td>
+        </tr>
+        <tr>
+          <td><span class="player-pos pos-te">TE</span><strong>Sam LaPorta</strong></td>
+          <td>Priya K.</td>
+          <td>Rd 5</td>
+          <td>Rd 5</td>
+          <td>
+            <span class="year-pip pip-used"></span>
+            <span class="year-pip pip-empty"></span>
+            <span class="year-pip pip-empty"></span>
+          </td>
+          <td class="years-left-3">3 left</td>
+          <td>After 2027</td>
+        </tr>
+        <tr>
+          <td><span class="player-pos pos-wr">WR</span><strong>Puka Nacua</strong></td>
+          <td>Marcus L.</td>
+          <td>Rd 6</td>
+          <td>Rd 6</td>
+          <td>
+            <span class="year-pip pip-used"></span>
+            <span class="year-pip pip-used"></span>
+            <span class="year-pip pip-used"></span>
+          </td>
+          <td class="years-left-1">⚠️ Expired</td>
+          <td style="color:#e05c5c;">Cannot keep</td>
+        </tr>
+        <tr>
+          <td><span class="player-pos pos-rb">RB</span><strong>De'Von Achane</strong></td>
+          <td>Toni B.</td>
+          <td>Rd 4</td>
+          <td>Rd 4</td>
+          <td>
+            <span class="year-pip pip-used"></span>
+            <span class="year-pip pip-empty"></span>
+            <span class="year-pip pip-empty"></span>
+          </td>
+          <td class="years-left-3">3 left</td>
+          <td>After 2027</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===================== TRADES ===================== -->
+  <!-- TRADE DATA: Edit trades and draft pick ledger below -->
+  <div class="section" id="trades">
+    <div class="page-title">Trade Log</div>
+    <div class="filter-row">
+      <button class="season-btn active" onclick="filterSeason(this)">2024</button>
+      <button class="season-btn" onclick="filterSeason(this)">2023</button>
+      <button class="season-btn" onclick="filterSeason(this)">All picks</button>
+    </div>
+
+    <!-- EDIT: Each trade-card is one trade. Copy to add more. -->
+    <div class="trade-card">
+      <div>
+        <div class="trade-manager">Jake T. receives</div>
+        <div class="trade-items">
+          <div class="trade-item" style="color:#6dbf6d;">Davante Adams</div>
+          <div class="trade-pick">2025 2nd round pick</div>
+        </div>
+      </div>
+      <div>
+        <div class="trade-arrow">⇄</div>
+        <div class="trade-date">Nov 3, 2024</div>
+      </div>
+      <div>
+        <div class="trade-manager">Sarah M. receives</div>
+        <div class="trade-items">
+          <div class="trade-item" style="color:#6cb4e4;">Travis Kelce</div>
+          <div class="trade-pick">2025 3rd round pick</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="trade-card">
+      <div>
+        <div class="trade-manager">Devon R. receives</div>
+        <div class="trade-items">
+          <div class="trade-item" style="color:#c39bd3;">Mark Andrews</div>
+          <div class="trade-pick">2025 1st round pick</div>
+        </div>
+      </div>
+      <div>
+        <div class="trade-arrow">⇄</div>
+        <div class="trade-date">Oct 14, 2024</div>
+      </div>
+      <div>
+        <div class="trade-manager">Priya K. receives</div>
+        <div class="trade-items">
+          <div class="trade-item" style="color:#6dbf6d;">Jaylen Waddle</div>
+          <div class="trade-pick">2025 4th round pick</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EDIT: Update the draft pick ledger every time a pick is traded -->
+    <div class="subsection-title">📋 2025 Draft Pick Ledger</div>
+    <table class="standings-table">
+      <thead>
+        <tr>
+          <th>Round</th>
+          <th>Original Owner</th>
+          <th>Current Owner</th>
+          <th>Via Trade</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1st</td>
+          <td>Priya K.</td>
+          <td style="color:var(--ff-accent); font-weight:600;">Devon R.</td>
+          <td style="color:var(--ff-muted);">Oct 14 trade</td>
+        </tr>
+        <tr>
+          <td>2nd</td>
+          <td>Sarah M.</td>
+          <td style="color:var(--ff-accent); font-weight:600;">Jake T.</td>
+          <td style="color:var(--ff-muted);">Nov 3 trade</td>
+        </tr>
+        <tr>
+          <td>3rd</td>
+          <td>Jake T.</td>
+          <td style="color:var(--ff-accent); font-weight:600;">Sarah M.</td>
+          <td style="color:var(--ff-muted);">Nov 3 trade</td>
+        </tr>
+        <tr>
+          <td>4th</td>
+          <td>Devon R.</td>
+          <td style="color:var(--ff-accent); font-weight:600;">Priya K.</td>
+          <td style="color:var(--ff-muted);">Oct 14 trade</td>
+        </tr>
+        <tr>
+          <td>5th–end</td>
+          <td colspan="2" style="color:var(--ff-muted);">All original owners</td>
+          <td>—</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===================== DRAFT ===================== -->
+  <!-- DRAFT DATA: Edit draft picks below. Add rounds/picks as needed. -->
+  <div class="section" id="draft">
+    <div class="page-title">Draft History</div>
+    <div class="filter-row">
+      <button class="season-btn active" onclick="filterSeason(this)">2024</button>
+      <button class="season-btn" onclick="filterSeason(this)">2023</button>
+      <button class="season-btn" onclick="filterSeason(this)">2022</button>
+    </div>
+
+    <!-- EDIT: Add/remove draft-pick-card divs. pick-num = overall pick (e.g. 1.01), pick-player = player name, pick-mgr = manager -->
+    <div class="draft-round">
+      <div class="round-label">Round 1</div>
+      <div class="draft-picks">
+        <div class="draft-pick-card"><div class="pick-num">1.01</div><div class="pick-player">CeeDee Lamb</div><div class="pick-mgr">Jake T.</div></div>
+        <div class="draft-pick-card"><div class="pick-num">1.02</div><div class="pick-player">Christian McCaffrey</div><div class="pick-mgr">Sarah M.</div></div>
+        <div class="draft-pick-card"><div class="pick-num">1.03</div><div class="pick-player">Tyreek Hill</div><div class="pick-mgr">Devon R.</div></div>
+        <div class="draft-pick-card"><div class="pick-num">1.04</div><div class="pick-player">Justin Jefferson</div><div class="pick-mgr">Priya K.</div></div>
+        <div class="draft-pick-card"><div class="pick-num">1.05</div><div class="pick-player">Ja'Marr Chase</div><div class="pick-mgr">Marcus L.</div></div>
+        <div class="draft-pick-card"><div class="pick-num">1.06</div><div class="pick-player">Josh Allen</div><div class="pick-mgr">Toni B.</div></div>
+        <div class="draft-pick-card"><div class="pick-num">1.07</div><div class="pick-player">Bijan Robinson</div><div class="pick-mgr">Chris W.</div></div>
+        <div class="draft-pick-card"><div class="pick-num">1.08</div><div class="pick-player">Puka Nacua</div><div class="pick-mgr">Ling H.</div></div>
+      </div>
+    </div>
+
+    <div class="draft-round">
+      <div class="round-label">Round 2</div>
+      <div class="draft-picks">
+        <div class="draft-pick-card"><div class="pick-num">2.01</div><div class="pick-player">Amon-Ra St. Brown</div><div class="pick-mgr">Ling H.</div></div>
+        <div class="draft-pick-card"><div class="pick-num">2.02</div><div class="pick-player">Davante Adams</div><div class="pick-mgr">Chris W.</div></div>
+        <div class="draft-pick-card"><div class="pick-num">2.03</div><div class="pick-player">Tony Pollard</div><div class="pick-mgr">Toni B.</div></div>
+        <div class="draft-pick-card"><div class="pick-num">2.04</div><div class="pick-player">Lamar Jackson</div><div class="pick-mgr">Marcus L.</div></div>
+        <div class="draft-pick-card"><div class="pick-num">2.05</div><div class="pick-player">Sam LaPorta</div><div class="pick-mgr">Priya K.</div></div>
+        <div class="draft-pick-card"><div class="pick-num">2.06</div><div class="pick-player">Jalen Hurts</div><div class="pick-mgr">Devon R.</div></div>
+        <div class="draft-pick-card"><div class="pick-num">2.07</div><div class="pick-player">Stefon Diggs</div><div class="pick-mgr">Sarah M.</div></div>
+        <div class="draft-pick-card"><div class="pick-num">2.08</div><div class="pick-player">Travis Kelce</div><div class="pick-mgr">Jake T.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== PLAYOFF % ===================== -->
+  <!-- PLAYOFF DATA: Commissioner updates these percentages each week.
+       pct-high (green) = 70%+, pct-mid (yellow) = 30-69%, pct-low (red) = under 30%
+       Fill bar width should match the percentage number.
+       Add clinched-badge or eliminated-badge span next to team name when applicable. -->
+  <div class="section" id="playoffs">
+    <div class="page-title">Playoff Percentages</div>
+    <!-- EDIT: Update this date each week -->
+    <div class="playoff-updated">Last updated by commissioner: Week 13 · Dec 10, 2024</div>
+
+    <div class="playoff-grid">
+
+      <!-- EDIT: Each playoff-card is one team. Duplicate to add teams. -->
+      <div class="playoff-card">
+        <div class="playoff-header">
+          <div>
+            <div class="playoff-team-name">Mahomes Alone <span class="clinched-badge">✓ Clinched</span></div>
+            <div class="playoff-manager">Jake T.</div>
+          </div>
+          <div class="playoff-pct pct-high">99%</div>
+        </div>
+        <div class="pct-bar-track"><div class="pct-bar-fill fill-high" style="width:99%"></div></div>
+        <div class="playoff-record">11-3 · +241.2 PF differential</div>
+        <div class="playoff-note">Locked in as the 1 seed.</div>
+      </div>
+
+      <div class="playoff-card">
+        <div class="playoff-header">
+          <div>
+            <div class="playoff-team-name">Ekeler Shelf <span class="clinched-badge">✓ Clinched</span></div>
+            <div class="playoff-manager">Sarah M.</div>
+          </div>
+          <div class="playoff-pct pct-high">97%</div>
+        </div>
+        <div class="pct-bar-track"><div class="pct-bar-fill fill-high" style="width:97%"></div></div>
+        <div class="playoff-record">10-4 · 2nd in points</div>
+        <div class="playoff-note">Clinched with win last week.</div>
+      </div>
+
+      <div class="playoff-card">
+        <div class="playoff-header">
+          <div>
+            <div class="playoff-team-name">Back That Stafford Up</div>
+            <div class="playoff-manager">Devon R.</div>
+          </div>
+          <div class="playoff-pct pct-high">81%</div>
+        </div>
+        <div class="pct-bar-track"><div class="pct-bar-fill fill-high" style="width:81%"></div></div>
+        <div class="playoff-record">9-5 · On the bubble</div>
+        <div class="playoff-note">Win in Week 14 clinches a spot.</div>
+      </div>
+
+      <div class="playoff-card">
+        <div class="playoff-header">
+          <div>
+            <div class="playoff-team-name">CMC Hammer</div>
+            <div class="playoff-manager">Priya K.</div>
+          </div>
+          <div class="playoff-pct pct-mid">61%</div>
+        </div>
+        <div class="pct-bar-track"><div class="pct-bar-fill fill-mid" style="width:61%"></div></div>
+        <div class="playoff-record">8-6 · Needs help</div>
+        <div class="playoff-note">Must win + Devon loss to clinch.</div>
+      </div>
+
+      <div class="playoff-card">
+        <div class="playoff-header">
+          <div>
+            <div class="playoff-team-name">Touch Down Bad Guy</div>
+            <div class="playoff-manager">Marcus L.</div>
+          </div>
+          <div class="playoff-pct pct-mid">38%</div>
+        </div>
+        <div class="pct-bar-track"><div class="pct-bar-fill fill-mid" style="width:38%"></div></div>
+        <div class="playoff-record">7-7 · Long shot</div>
+        <div class="playoff-note">Win + 2 losses ahead needed.</div>
+      </div>
+
+      <div class="playoff-card">
+        <div class="playoff-header">
+          <div>
+            <div class="playoff-team-name">Inglorious Busters</div>
+            <div class="playoff-manager">Toni B.</div>
+          </div>
+          <div class="playoff-pct pct-low">12%</div>
+        </div>
+        <div class="pct-bar-track"><div class="pct-bar-fill fill-low" style="width:12%"></div></div>
+        <div class="playoff-record">5-9 · Nearly eliminated</div>
+        <div class="playoff-note">Needs a small miracle this week.</div>
+      </div>
+
+      <div class="playoff-card">
+        <div class="playoff-header">
+          <div>
+            <div class="playoff-team-name">Josh Allen My Life <span class="eliminated-badge">✗ Out</span></div>
+            <div class="playoff-manager">Chris W.</div>
+          </div>
+          <div class="playoff-pct pct-low">0%</div>
+        </div>
+        <div class="pct-bar-track"><div class="pct-bar-fill fill-low" style="width:0%"></div></div>
+        <div class="playoff-record">4-10 · Eliminated</div>
+        <div class="playoff-note">Mathematically eliminated in Week 12.</div>
+      </div>
+
+      <div class="playoff-card">
+        <div class="playoff-header">
+          <div>
+            <div class="playoff-team-name">RotoGrinding Nemo <span class="eliminated-badge">✗ Out</span></div>
+            <div class="playoff-manager">Ling H.</div>
+          </div>
+          <div class="playoff-pct pct-low">0%</div>
+        </div>
+        <div class="pct-bar-track"><div class="pct-bar-fill fill-low" style="width:0%"></div></div>
+        <div class="playoff-record">2-12 · Eliminated</div>
+        <div class="playoff-note">Already shopping for next year's keepers.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===================== TRASH TALK ===================== -->
+  <!-- TRASH TALK DATA: Add new messages at the top of msg-list -->
+  <div class="section" id="board">
+    <div class="page-title">Trash Talk</div>
+    <div class="msg-list">
+      <!-- EDIT: Each msg-card is one post. Add new ones at the top. -->
+      <div class="msg-card">
+        <div class="msg-header">
+          <span class="msg-author">Jake T. 🏆</span>
+          <span class="msg-time">Dec 16 · 9:42pm</span>
+        </div>
+        <div class="msg-body">Back to back champs baby. You're all just paying rent on MY league. 💰👑 See you all in September.</div>
+      </div>
+      <div class="msg-card">
+        <div class="msg-header">
+          <span class="msg-author">Priya K.</span>
+          <span class="msg-time">Dec 16 · 10:01pm</span>
+        </div>
+        <div class="msg-body">Enjoy it Jake. I have the 1.01 next year AND Devon's 1st rounder. This is my year. You've been warned.</div>
+      </div>
+      <div class="msg-card">
+        <div class="msg-header">
+          <span class="msg-author">Ling H.</span>
+          <span class="msg-time">Dec 16 · 10:18pm</span>
+        </div>
+        <div class="msg-body">Finished last but honestly I had the highest floor on the injury report front. Lost Achane in week 2. I want a refund.</div>
+      </div>
+      <div class="msg-card">
+        <div class="msg-header">
+          <span class="msg-author">Sarah M.</span>
+          <span class="msg-time">Dec 15 · 7:55pm</span>
+        </div>
+        <div class="msg-body">Runner up two years in a row. I'm going to need therapy. Or a better kicker. Probably both.</div>
+      </div>
+    </div>
+    <p style="font-size:12px; color:var(--ff-muted); margin-bottom:8px;">To add a new post: open the HTML file, find the msg-list section, and copy a msg-card block to the top.</p>
+  </div>
+
+</div><!-- end .content -->
+
+<script>
+  function showSection(id, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if (btn) btn.classList.add('active');
+  }
+
+  function filterSeason(btn) {
+    btn.closest('.filter-row').querySelectorAll('.season-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+</script>
+</body>
+</html>
